@@ -12,12 +12,11 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Compilar con Buildozer
-        uses: kivy/buildozer-action@master
+      - name: Compilar con Buildozer (Acción Estable)
+        uses: ArtemSBulgakov/buildozer-action@v1
         id: buildozer
         with:
-          filename: buildozer.spec
-          command: android debug
+          command: buildozer android debug
 
       - name: Subir APK generado
         uses: actions/upload-artifact@v4
