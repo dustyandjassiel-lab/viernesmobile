@@ -101,13 +101,13 @@ android.permissions = INTERNET
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-android.api = 31
+android.api = 33
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 21
 
 # (int) Android SDK version to use
-#android.sdk = 20
+#android.sdk = 33
 
 # (str) Android NDK version to use
 android.ndk = 25b
@@ -374,7 +374,7 @@ ios.codesign.allowed = false
 
 # (str) Name of the certificate to use for signing the debug version
 # Get a list of available identities: buildozer ios list_identities
-#ios.codesign.debug = "iPhone Developer:   ()"
+#ios.codesign.debug = "iPhone Developer:    ()"
 
 # (str) The development team to use for signing the debug version
 #ios.codesign.development_team.debug = 
