@@ -23,10 +23,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: 🛠️ Instalar dependencias del sistema
+    - name: 🛠️ Instalar dependencias y arquitectura de 32 bits para SDK/aidl
       run: |
+        sudo dpkg --add-architecture i386
         sudo apt-get update
-        sudo apt-get install -y git zip unzip autoconf automake libtool pkg-config zlib1g-dev libncursesw6 libffi-dev libssl-dev
+        sudo apt-get install -y git zip unzip autoconf automake libtool pkg-config zlib1g-dev libncursesw6 libffi-dev libssl-dev build-essential libltdl-dev libc6:i386 libstdc++6:i386 libz1:i386
 
     - name: 🚀 Instalar Buildozer y Cython
       run: |
