@@ -1,4 +1,4 @@
-name: Compilar APK Android
+name: Compilar APK
 
 on:
   push:
@@ -6,40 +6,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Usamos una versión estable de Ubuntu
 
     steps:
-    - name: 📥 Clonar repositorio
-      uses: actions/checkout@v4
+      - name: Checkout del código
+        uses: actions/checkout@v4
 
-    - name: 🐍 Configurar Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      # Esto soluciona los problemas de librerías de 32 bits que a veces rompen las herramientas de Android (como aidl)
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y build-essential git ccache libncurses5:i386 libstdc++6:i386 libgtk2.0-0:i386 libpangox-1.0-0:i386 libpangoxft-1.0-0:i386 libidn11:i386 zlib1g:i386
 
-    - name: ☕ Configurar Java (JDK 17)
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Compilar con Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer android debug
 
-    - name: 🛠️ Instalar dependencias y arquitectura de 32 bits para SDK/aidl
-      run: |
-        sudo dpkg --add-architecture i386
-        sudo apt-get update
-        sudo apt-get install -y git zip unzip autoconf automake libtool pkg-config zlib1g-dev libncursesw6 libffi-dev libssl-dev build-essential libltdl-dev libc6:i386 libstdc++6:i386 libz1:i386
-
-    - name: 🚀 Instalar Buildozer y Cython
-      run: |
-        pip install --upgrade pip
-        pip install Cython==0.29.36 buildozer
-
-    - name: 🏗️ Compilar APK con Buildozer
-      run: |
-        buildozer -v android debug
-
-    - name: 📦 Subir APK como artefacto
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug-apk
-        path: bin/*.apk
+      - name: Subir APK generado
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: bin/*.apk
