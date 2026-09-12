@@ -6,24 +6,18 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # Usamos una versión estable de Ubuntu
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # Esto soluciona los problemas de librerías de 32 bits que a veces rompen las herramientas de Android (como aidl)
-      - name: Instalar dependencias del sistema
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install -y build-essential git ccache libncurses5:i386 libstdc++6:i386 libgtk2.0-0:i386 libpangox-1.0-0:i386 libpangoxft-1.0-0:i386 libidn11:i386 zlib1g:i386
-
       - name: Compilar con Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
+        uses: kivy/buildozer-action@master
         id: buildozer
         with:
-          command: buildozer android debug
+          filename: buildozer.spec
+          command: android debug
 
       - name: Subir APK generado
         uses: actions/upload-artifact@v4
